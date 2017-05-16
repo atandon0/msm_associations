@@ -1,0 +1,96 @@
+<div class="page-header">
+  <h3>Actor #<%= @actor.id %></h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12 mb-2">
+    <dl class="dl-horizontal">
+      <dt>Name</dt>
+      <dd><%= @actor.name %></dd>
+
+      <dt>Dob</dt>
+      <dd><%= @actor.dob %></dd>
+
+      <dt>Bio</dt>
+      <dd><%= @actor.bio %></dd>
+
+      <dt>Image url</dt>
+      <dd><%= @actor.image_url %></dd>
+
+      <dt>Number of characters</dt>
+      <dd><%= Character.where(:actor_id => @actor.id).count %></dd>
+    </dl>
+
+    <dt>List of movies</dt>
+    <ul>
+      <% Character.where(:movie_id => @movie.id).each do |character| %>
+      <li><a href="/movies/<%= Movie.find_by(:id => character.movie_id) %>"> <%= Movie.find_by(:id => character.movie_id).title %> </a></li>
+      <% end %>
+    </ul>
+
+
+    <dt>List of characters</dt>
+    <ul>
+      <% Character.where(:actor_id => @actor.id).each do |character| %>
+      <li><a href="/characters/<%= character.id %>"> <%= character.name %> </a></li>
+      <% end %>
+    </ul>
+    </dl>
+
+    <dt> Create a new character </dt>
+    <form action="/create_character" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for movie_id -->
+      <div class="form-group">
+        <label for="movie_id" class="control-label">
+          Movie
+        </label>
+
+        <%= select_tag("movie_id", options_from_collection_for_select(Movie.all, :id, :title), :class => "form-control") %> <a href="/movies/new"> New Movie </a>
+
+      <!-- Label and input for actor_id -->
+      <div class="form-group">
+        <label for="actor_id" class="control-label">
+          Actor:
+        </label>
+
+        <input type="hidden" name = "actor_id" value ="<%= @actor.id %>"> <%= @actor.name %>
+      </div>
+
+
+
+      <!-- Label and input for name -->
+      <div class="form-group">
+        <label for="name" class="control-label">
+          Name
+        </label>
+
+        <input type="text" id="name" name="name" placeholder="Name" class="form-control" value="<%= @character.name %>">
+      </div>
+
+      <button class="btn btn-success">
+        Create Character
+      </button>
+      or
+      <a href="/characters">Cancel</a>
+    </form>
+
+
+
+
+
+    <div class="btn-group btn-group-justified">
+      <a href="/actors" class="btn btn-primary">
+        Back
+      </a>
+      <a href="/actors/<%= @actor.id %>/edit" class="btn btn-warning">
+        Edit
+      </a>
+      <a href="/delete_actor/<%= @actor.id %>" class="btn btn-danger" rel="nofollow">
+        Delete
+      </a>
+    </div>
+  </div>
+</div>
